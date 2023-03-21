@@ -13,3 +13,18 @@ dotnet sln add .\BuberBreakfast.Contracts\ .\BuberBreakfast\
 ```
 
 ### This project is made in .NET 7
+
+Add references
+```
+dotnet add .\BuberBreakfast\ reference .\BuberBreakfast.Contracts\
+```
+
+Build project
+```
+dotnet build
+```
+
+Run the project
+```
+dotnet run --project .\BuberBreakfast\
+```
