@@ -1,29 +1,82 @@
 namespace BuberBreakfast.Controllers;
 
 using BuberBreakfast.Contracts.BuberBreakfast;
+using BuberBreakfast.Models;
+using BuberBreakfast.Services.Breakfasts;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
 public class BreakfastsController : ControllerBase
 {
-    [HttpPost()]
-    public IActionResult CreateBreakfast(CreateBreakfastRequest request) {
-        return Ok(request);
+    private readonly IBreakfastService service;
+
+    public BreakfastsController(IBreakfastService breakfastService)
+    {
+        service = breakfastService;
+    }
+
+    [HttpPost]
+    public IActionResult CreateBreakfast(CreateBreakfastRequest request)
+    {
+        var breakfast = new Breakfast(
+            Guid.NewGuid(),
+            request.Name,
+            request.Description,
+            request.StartDateTime,
+            request.EndDateTime,
+            DateTime.UtcNow,
+            request.Savory,
+            request.Sweet
+        );
+
+        // TODO: save breakfast to database
+        service.CreateBreakfast(breakfast);
+
+        var response = new BreakfastResponse(
+            breakfast.Id,
+            breakfast.Name,
+            breakfast.Description,
+            breakfast.StartDateTime,
+            breakfast.EndDateTime,
+            breakfast.LastModifiedDateTime,
+            breakfast.Savory,
+            breakfast.Sweet
+        );
+
+        return CreatedAtAction(
+            actionName: nameof(GetBreakfast),
+            routeValues: new { id = breakfast.Id },
+            value: response
+        );
     }
 
     [HttpGet("{id:guid}")]
-    public IActionResult GetBreakfast(Guid id) {
-        return Ok(id);
+    public IActionResult GetBreakfast(Guid id)
+    {
+        Breakfast breakfast = service.GetBreakfast(id);
+        var response = new BreakfastResponse(
+            breakfast.Id,
+            breakfast.Name,
+            breakfast.Description,
+            breakfast.StartDateTime,
+            breakfast.EndDateTime,
+            breakfast.LastModifiedDateTime,
+            breakfast.Savory,
+            breakfast.Sweet
+        );
+        return Ok(response);
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request) {
+    public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request)
+    {
         return Ok(request);
     }
 
     [HttpDelete("{id:guid}")]
-    public IActionResult DeleteBreakfast(Guid id) {
+    public IActionResult DeleteBreakfast(Guid id)
+    {
         return Ok(id);
     }
 }
