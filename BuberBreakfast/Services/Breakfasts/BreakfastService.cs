@@ -8,10 +8,11 @@ public class BreakfastService : IBreakfastService
 {
     private static readonly Dictionary<Guid, Breakfast> breakfasts = new();
 
-    public void CreateBreakfast(Breakfast breakfast)
+    public ErrorOr<Created> CreateBreakfast(Breakfast breakfast)
     {
-        // TODO: here we use a repository to store the data
         breakfasts.Add(breakfast.Id, breakfast);
+
+        return Result.Created;
     }
 
     public ErrorOr<Breakfast> GetBreakfast(Guid id)
@@ -24,13 +25,18 @@ public class BreakfastService : IBreakfastService
         return Errors.Breakfast.NotFound;
     }
 
-    public void DeleteBreakfast(Guid id)
+    public ErrorOr<Deleted> DeleteBreakfast(Guid id)
     {
         breakfasts.Remove(id);
+
+        return Result.Deleted;
     }
 
-    public void UpserBreakfast(Breakfast breakfast)
+    public ErrorOr<UpsertedBreakfast> UpserBreakfast(Breakfast breakfast)
     {
+        var isNewlyCreated = !breakfasts.ContainsKey(breakfast.Id);
         breakfasts[breakfast.Id] = breakfast;
+
+        return new UpsertedBreakfast(isNewlyCreated);
     }
 }
