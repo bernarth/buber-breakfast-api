@@ -16,4 +16,14 @@ public class BreakfastService : IBreakfastService
     {
         return breakfasts[id];
     }
+
+    public void DeleteBreakfast(Guid id)
+    {
+        breakfasts.Remove(id);
+    }
+
+    public void UpserBreakfast(Breakfast breakfast)
+    {
+        breakfasts[breakfast.Id] = breakfast;
+    }
 }
