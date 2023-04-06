@@ -28,3 +28,7 @@ Run the project
 ```
 dotnet run --project .\BuberBreakfast\
 ```
+
+### Packages added
+
+- `dotnet add .\BuberBreakfast\ package ErrorOr`

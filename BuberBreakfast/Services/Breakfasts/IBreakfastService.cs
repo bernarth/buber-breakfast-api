@@ -1,12 +1,13 @@
 namespace BuberBreakfast.Services.Breakfasts;
 
 using BuberBreakfast.Models;
+using ErrorOr;
 
 public interface IBreakfastService
 {
     void CreateBreakfast(Breakfast breakfast);
 
-    Breakfast GetBreakfast(Guid id);
+    ErrorOr<Breakfast> GetBreakfast(Guid id);
 
     void DeleteBreakfast(Guid id);
 
